@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { MdHome } from "react-icons/md"
 import Link from 'next/link';
 import { RiRobot3Fill } from "react-icons/ri";
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function Generate() {
     const [prompt, setPrompt] = useState('');
@@ -37,7 +38,7 @@ export default function Generate() {
         });
 
         const data = await response.json();
-        console.log(data.session.user.image)
+        console.log(data)
         if (response.ok) {
             setUser(data.session.user.image)
             return {
@@ -45,6 +46,7 @@ export default function Generate() {
             }
         } else {
             console.error('Error:', data.error);
+            toast.error(data.error)
             return null
         }
     };
@@ -58,6 +60,7 @@ export default function Generate() {
 
     return (
         <div className="generate-page flex flex-col justify-between items-center w-full min-h-screen px-12 bg-lightdark">
+            <Toaster />
             <div className='flex flex-col gap-2 w-full p-4'>
                 {
                     chat.map((x, i) => {

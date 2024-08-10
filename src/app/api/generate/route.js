@@ -9,17 +9,17 @@ export async function POST(req) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
   }
 
-  // const userKey = `rate_limit:${session.user.email}`;
-  // const userRate = await kv.get(userKey);
+  console.log(kv)
 
-  // if (userRate && userRate >= 3) {
-  //   return new Response(JSON.stringify({ error: 'Rate limit exceeded' }), { status: 429 });
-  // }
+  const userKey = `rate_limit:${session.user.email}`;
+  const userRate = await kv.get(userKey);
 
-  // await kv.incr(userKey);
-  // await kv.expire(userKey, 3600);
+  if (userRate && userRate >= 3) {
+    return new Response(JSON.stringify({ error: 'Rate limit exceeded! Come after hour!' }), { status: 429 });
+  }
 
-  // Send a random image from your pre-downloaded list
+  await kv.incr(userKey);
+  await kv.expire(userKey, 3600);
 
   const randomImage = gallary[Math.floor(Math.random() * gallary.length) % 14];
   console.log(randomImage)
